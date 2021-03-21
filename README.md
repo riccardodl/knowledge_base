@@ -1,4 +1,4 @@
-p.45
+p.79
 
 ## NOTES
 
@@ -49,6 +49,24 @@ Namespaces can be thought as folders.
 to remove a label `k label pods <podname> <label>-`
 `port-forward` can also be done against service/<service-name>, but requests will end up in a single pod inside that service. NOT load balanced.
 
+### CHAP.5
+Multiple container can be defined in the same pod (via the specs). You can define a mounthPath for the pod and then give the containers mount points (maybe with different names) to the volume. It can be used for caching, sharing resources etc.
+
+### CHAP.6
+`kubectl get deployments --show-labels`
+`kubectl get deployments -L <deployment-name>`
+`kubectl get pods --selector="ver=2, !canary, env in (prod, pre-prod)"`
+
+### CHAP:7
+To scale pods, put them in a deployment `kubectl scale deployments/<my-deplo> --replicas=4`
+Instead of `kubectl run` use `kubectl create deployment alpaca-prod --image=gcr.io/kuar-demo/kuard-amd64:blue --port=8080` to create a deployment.
+`kubectl get endpoints alpaca-prod --watch` to see the status of the endpoint, if a deployment is accepting traffic.
+### CHAP:8
+### CHAP:9
+### CHAP:10
+### CHAP:11
+### CHAP:12
+
 ## Links
 https://kubernetes.io/docs/concepts/overview/components/ read this
 
@@ -84,7 +102,7 @@ Examples: `KUARD_LB=$(kubectl get service kuard -o jsonpath='{.status.loadBalanc
 * `terraform apply -var="<key>=<value>"` ____
 * `terraform show` __look the current state of the infrastructure__
 * `TF_VAR_<variable>` __this environment-variable can be set to set the <variable> terraform variable.__
-* `` ____
+* `kubectl expose deployment <my-deplo>` __To create a service__
 * `` ____
 * `` ____
 * `` ____
