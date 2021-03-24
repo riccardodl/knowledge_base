@@ -1,4 +1,4 @@
-p.79
+p.119
 
 ## NOTES
 
@@ -60,11 +60,26 @@ Multiple container can be defined in the same pod (via the specs). You can defin
 ### CHAP:7
 To scale pods, put them in a deployment `kubectl scale deployments/<my-deplo> --replicas=4`
 Instead of `kubectl run` use `kubectl create deployment alpaca-prod --image=gcr.io/kuar-demo/kuard-amd64:blue --port=8080` to create a deployment.
-`kubectl get endpoints alpaca-prod --watch` to see the status of the endpoint, if a deployment is accepting traffic.
+`kubectl get endpoints <service> --watch` to see the status of the endpoint, if a deployment is accepting traffic.
+With a service listening on a port defined in a NodePorts, any node in the cluster can contact my service. (NodePorts is used to expose services to all nodes of the cluster, clusterIp makes me visible only within the node).
+I can SSH tunnel into a node with a NodePort exposed with `ssh <node> -L 8080:localhost:<nodePort>` __You get <nodePort> via kubectl describe service <my-service>__
+LoadBalancer extends on NodePort.
+For every service, a buddy endpoint is created. Endpoints is what system uses to communicate with a service instead of ClusterIP.
+
 ### CHAP:8
+Http based load balancing in k8s is called Ingress, it implements the virtual hosting pattern. Multiple ingress files get merged in the ingress controller, which is exposed by a LoadBalancer service. Ingress controller must be installed separately. Contour is an ingress controller that uses Envoy as load balancer. K8s only provides a common ingress specification.
+An Ingress object can only refer to an upstream service within the same namespace. However multiple Ingress objects in different namespaces can specify subpaths for the same host, they end up getting merged in the end. This can lead to unexpected routing behaviour. Some ingress controllers allow path rewriting or regex.
+ sudo nano /etc/hosts 10.105.120.45
+
 ### CHAP:9
+Reconciliation loop. ReplicaSets do not own the Pods they create, they use label selector queries. To debug a pod change its label (ReplicaSets will recreate + you have the pod running to debug).
+`--cascade=false` flag if you wanna delete the rs definition, but not the pods that were managed by the rs.
+
 ### CHAP:10
+ReplicaSets manage Pods, Deployments manage ReplicaSets. Relations managed by labels and label selectors.
+`k describe deploy` has OldReplicaSet and NewReplicaSet, if I'm in the middle of a rollout, both values will be filled. `k rollout history` and `k rollout stauts` help too.
 ### CHAP:11
+
 ### CHAP:12
 
 ## Links
@@ -103,8 +118,8 @@ Examples: `KUARD_LB=$(kubectl get service kuard -o jsonpath='{.status.loadBalanc
 * `terraform show` __look the current state of the infrastructure__
 * `TF_VAR_<variable>` __this environment-variable can be set to set the <variable> terraform variable.__
 * `kubectl expose deployment <my-deplo>` __To create a service__
-* `` ____
-* `` ____
+* `k get deploy kuard-deployment -o jsonpath --template {.spec.selector.matchLabels}` __Which labels is my deployment matching?__
+* `kubectl replace -f <filename> --save-config` __If you created a deployment using kubectl create, this adds useful keys (kinda autofill)__
 * `` ____
 * `` ____
 * `` ____
@@ -117,5 +132,3 @@ Examples: `KUARD_LB=$(kubectl get service kuard -o jsonpath='{.status.loadBalanc
 * `docker stop kuard` ____
 * `docker system prune ` __delete all untagged images, all stopped containers etc`__
 
-
-p30
