@@ -1,4 +1,4 @@
-p.119
+p.131
 
 ## NOTES
 
@@ -77,7 +77,12 @@ Reconciliation loop. ReplicaSets do not own the Pods they create, they use label
 
 ### CHAP:10
 ReplicaSets manage Pods, Deployments manage ReplicaSets. Relations managed by labels and label selectors.
-`k describe deploy` has OldReplicaSet and NewReplicaSet, if I'm in the middle of a rollout, both values will be filled. `k rollout history` and `k rollout stauts` help too.
+`k describe deploy` has OldReplicaSet and NewReplicaSet, if I'm in the middle of a rollout, both values will be filled. `k rollout history --revision=<revision-you-wanna-check-if-any>` and `k rollout status` help too. You can `pause` and `resume` rollouts.
+When you rollout a deployment the revision gets "recycled", so the original revision (the one you rolled back to) is removed. The recreate strategy simply kills all the pods in a replica set and update the pod spec (rs notices and recreates pods).
+Rollout strategy: maxUnavailable you control how many old replicas to kill at a time, with maxSurge you specify you allow provisioning of additional resources, temporarily. Killing of old pods depends on readiness check, you need to specify them on the pod definition, otherwise the deployment controller is running blind.
+If you have a deadlock a rollout will never terminate (never report readiness), so, timeout your rollouts (so they get marked failed). Note that if a new pod manages to get rolled out, the timer resets (the timeout only marks progress, not total rollout time).
+
+
 ### CHAP:11
 
 ### CHAP:12
@@ -119,8 +124,8 @@ Examples: `KUARD_LB=$(kubectl get service kuard -o jsonpath='{.status.loadBalanc
 * `TF_VAR_<variable>` __this environment-variable can be set to set the <variable> terraform variable.__
 * `kubectl expose deployment <my-deplo>` __To create a service__
 * `k get deploy kuard-deployment -o jsonpath --template {.spec.selector.matchLabels}` __Which labels is my deployment matching?__
-* `kubectl replace -f <filename> --save-config` __If you created a deployment using kubectl create, this adds useful keys (kinda autofill)__
-* `` ____
+* `kubectl replace -f <filename> --save-config` __Replace the deployment in the file and save the modified config in its annotation__
+* `kubectl rollout status deployments <deployment-name>` __Check the rollout status__
 * `` ____
 * `` ____
 * `` ____
