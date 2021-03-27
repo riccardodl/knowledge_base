@@ -1,4 +1,4 @@
-p.131
+p.143
 
 ## NOTES
 
@@ -84,8 +84,27 @@ If you have a deadlock a rollout will never terminate (never report readiness), 
 
 
 ### CHAP:11
+DeamonSets creates a pod on every node, unless a selector is used. DS specifies nodeName field in pod definition. DS are ignored by kube-sched. Reconciliation loop like replicaSets.
 
 ### CHAP:12
+If a pod fails before job completion, the pod will be rescheduled. If not enough resources available the job will not be scheduled. Small chance of duplicates in certain node failure scenarios. Completions and Parallelism attributes. By default a unique label is applied by the job object itself (can be overridden).
+
+### CHAP:13
+
+
+### CHAP:14
+
+
+### CHAP:15
+
+
+### CHAP:16
+
+
+### CHAP:17
+
+
+### CHAP:18
 
 ## Links
 https://kubernetes.io/docs/concepts/overview/components/ read this
@@ -114,6 +133,39 @@ https://kubernetes.io/docs/concepts/overview/components/ read this
 * `kubectl run -i oneshot` __run a single job once__
 * `kubectl proxy` __similar to port forward, but instead of sending TCP traffic you send HTTP requests, port foward is for internal access and debugging, proxy is to forward traffic__
 * `kubectl top nodes` __top__
+* `kubectl expose deployment <my-deplo>` __To create a service__
+* `k get deploy kuard-deployment -o jsonpath --template {.spec.selector.matchLabels}` __Which labels is my deployment matching?__
+* `kubectl replace -f <filename> --save-config` __Replace the deployment in the file and save the modified config in its annotation__
+* `kubectl rollout status deployments <deployment-name>` __Check the rollout status__
+* `kubectl label <resource>` ____
+* `` ____
+* `` ____
+* `` ____
+* `` ____
+* `` ____
+* `` ____
+* `` ____
+* `` ____
+* `` ____
+* `` ____
+* `` ____
+* `` ____
+* `` ____
+* `` ____
+* `` ____
+* `` ____
+* `` ____
+* `` ____
+* `` ____
+* `` ____
+* `` ____
+* `` ____
+* `` ____
+* `` ____
+* `` ____
+* `` ____
+* `` ____
+* `` ____
 
 Examples: `KUARD_LB=$(kubectl get service kuard -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')` __query a specific deployment for a parameter__
 
@@ -122,11 +174,6 @@ Examples: `KUARD_LB=$(kubectl get service kuard -o jsonpath='{.status.loadBalanc
 * `terraform apply -var="<key>=<value>"` ____
 * `terraform show` __look the current state of the infrastructure__
 * `TF_VAR_<variable>` __this environment-variable can be set to set the <variable> terraform variable.__
-* `kubectl expose deployment <my-deplo>` __To create a service__
-* `k get deploy kuard-deployment -o jsonpath --template {.spec.selector.matchLabels}` __Which labels is my deployment matching?__
-* `kubectl replace -f <filename> --save-config` __Replace the deployment in the file and save the modified config in its annotation__
-* `kubectl rollout status deployments <deployment-name>` __Check the rollout status__
-* `` ____
 * `` ____
 * `` ____
 * `` ____
