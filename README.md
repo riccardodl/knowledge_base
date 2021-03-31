@@ -1,4 +1,4 @@
-p.143
+p.227
 
 ## NOTES
 
@@ -87,24 +87,33 @@ If you have a deadlock a rollout will never terminate (never report readiness), 
 DeamonSets creates a pod on every node, unless a selector is used. DS specifies nodeName field in pod definition. DS are ignored by kube-sched. Reconciliation loop like replicaSets.
 
 ### CHAP:12
-If a pod fails before job completion, the pod will be rescheduled. If not enough resources available the job will not be scheduled. Small chance of duplicates in certain node failure scenarios. Completions and Parallelism attributes. By default a unique label is applied by the job object itself (can be overridden).
+If a pod fails before job completion, the pod will be rescheduled. If not enough resources available the job will not be scheduled. Small chance of duplicates in certain node failure scenarios. Completions and Parallelism attributes. By default a unique label is applied by the job object itself (can be overridden). restartPolicy never will create a lot of "junk" pods, better use onFailure.
+You can schedule CronJob (spec.schdule field).
 
 ### CHAP:13
-
+ConfigMap is combined with a pod right before it is run. Three ways to use ConfigMap, mount it into a pod (a file created for each entry), environmental variable, created dynamically via command line argument. Secrets can be specified directly with `--from-literal=<key>=<value>`. Secrets are base64 encoded. ConfigMap are UTF-8 text files. To replace a secret is smart to apply the new secret with --dry-run (it will encode it and output on stdout) and then pipe it with `kubectl replace -f -` which reads from stdin. Updates to secrets or configmaps will be pushed to all volumes that use them in a couple of seconds.
 
 ### CHAP:14
-
+Role and RoleBinding apply to a namespace, ClusterRole and ClusterRoleBinding to the whole cluster. Cannot use namespaced roles for CRDs (which are not namespaced). AggregationRule to combine existing roles. You can assign bindings to groups.
 
 ### CHAP:15
-
+StatefulSet are deployed sequentially and the individual pods are uniquely identifiable, they have an increasing id at the end of the pod name, instead of a random string. We need a headless service to manage the StatefulSet. Headless because it will not have a clusterIp associated to it (No need for load balancing since pods have a unique identity).
 
 ### CHAP:16
+CLuster admins privileges are required to extend k8s. Extension happen with CRD, or via the CNI/CSI/CRI interface extensions (Container network interface/Storage/Runtime).
+Requests flow:
+User -> Authentication/Authorization -> Admission control (validation and mutation) -> API Server -> Storage
 
+Admission controllers (there are several) can modify and reject API requests.
+Another extension method is CRDs. CRDs are meta-resources, they define resources.
 
 ### CHAP:17
 
 
 ### CHAP:18
+Filesystems as the source of truth
+Code review to ensure quality of changes
+Feature flags for staged roll forward and roll back
 
 ## Links
 https://kubernetes.io/docs/concepts/overview/components/ read this
@@ -131,19 +140,19 @@ https://kubernetes.io/docs/concepts/overview/components/ read this
 * `kubectl cp $HOME/<filepath> <pod-name>:<filepath>` __copy file from remote machine__
 * `$ kubectl get deployments kuard --export -o yaml > kuard-deployment.yaml $ kubectl replace -f kuard-deployment.yaml --save-config` __export a deployment into a file and then store changes__
 * `kubectl run -i oneshot` __run a single job once__
-* `kubectl proxy` __similar to port forward, but instead of sending TCP traffic you send HTTP requests, port foward is for internal access and debugging, proxy is to forward traffic__
+* `kubectl proxy` __similar to port forward, but instead of sending TCP traffic you send HTTP requests, port forward is for internal access and debugging, proxy is to forward traffic__
 * `kubectl top nodes` __top__
 * `kubectl expose deployment <my-deplo>` __To create a service__
 * `k get deploy kuard-deployment -o jsonpath --template {.spec.selector.matchLabels}` __Which labels is my deployment matching?__
 * `kubectl replace -f <filename> --save-config` __Replace the deployment in the file and save the modified config in its annotation__
 * `kubectl rollout status deployments <deployment-name>` __Check the rollout status__
 * `kubectl label <resource>` ____
-* `` ____
-* `` ____
-* `` ____
-* `` ____
-* `` ____
-* `` ____
+* `k create configmap test-config --from-file=test-config.txt --from-literal=extra-param=extra-value --from-literal=another-param=another-value` __Create ConfigMap__
+* `k create secret generic <name> --from-file=<filename>` ____
+* `kubectl replace -f -` __Read file from stdin and use it to replace a resource (fx. create with --dry-run -o yaml and then use this to update a secret from files on disk without having to manually base64-encode data)__
+* `kubectl auth can-i get pods --subresource=logs` __Can if I'm auth to do a verb__
+* `kubectl auth reconcile` __Reapply RBAC changes__
+* `kubectl run -it --rm --image busybox busybox ping <svc dns name>` __Run pod interactively and ping__
 * `` ____
 * `` ____
 * `` ____

@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kuard-config
+  labels:
+    name: kuard-config
+spec:
+  containers:
+  - name: test-container
+    image: gcr.io/kuar-demo/kuard-amd64:blue
+    imagePullPolicy: Always
+    command:
+      - "/kuard"
+      - "$(EXTRA_PARAM)"
+    env:
+      - name: ANOTHER_PARAM
+        valueFrom:
+          configMapKeyRef:
+            name: test-config
+            key: another-param
+      - name: EXTRA_PARAM
+        valueFrom:
+          configMapKeyRef:
+            name: test-config
+            key: extra-param
+    volumeMounts:
+      - name: config-volume
+        mountPath: /config
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 8080
+  volumes:
+    - name: config-volume
+      configMap:
+        name: test-config
+  restartPolicy: Never
