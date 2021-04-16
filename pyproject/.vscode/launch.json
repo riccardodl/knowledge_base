@@ -14,6 +14,18 @@
             ],
             "django": true,
             "console": "internalConsole"
+        },
+        {
+            "name": "Debug tests",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}\\polls\\tests.py",
+            "args": [
+                "test",
+                "`echo -n \"${relativeFileDirname}\" | tr \\\\ .`.${fileBasenameNoExtension}"
+            ],
+            "django": true,
+            "console": "internalConsole"
         }
     ]
 }
