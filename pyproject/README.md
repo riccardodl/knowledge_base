@@ -34,6 +34,8 @@ class ResultsView(generic.DetailView):
 
 * coverage run --source='.' manage.py test pyproject && coverage report
 
+* default templates in `.venv/Lib/site-packages/django/contrib/admin/templates/admin/<template>.html`
+
 # TODO
 
 Read https://docs.djangoproject.com/en/3.2/topics/testing/
