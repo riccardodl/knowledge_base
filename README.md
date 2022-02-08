@@ -3,7 +3,7 @@
 This repo contains all the concepts useful to brush up your knowledge in enterprise software development and DevOps.
 
 ## Links
-https://kubernetes.io/docs/concepts/overview/components/ read this
+https://kubernetes.io/docs/concepts/overview/components/ official docs, very useful overview
 
 
 ## Commands
@@ -40,28 +40,7 @@ https://kubernetes.io/docs/concepts/overview/components/ read this
 * `kubectl auth can-i get pods --subresource=logs` __Can if I'm auth to do a verb__
 * `kubectl auth reconcile` __Reapply RBAC changes__
 * `kubectl run -it --rm --image busybox busybox ping <svc dns name>` __Run pod interactively and ping__
-* `` ____
-* `` ____
-* `` ____
-* `` ____
-* `` ____
-* `` ____
-* `` ____
-* `` ____
-* `` ____
-* `` ____
-* `` ____
-* `` ____
-* `` ____
-* `` ____
-* `` ____
-* `` ____
-* `` ____
-* `` ____
-* `` ____
-* `` ____
-* `` ____
-* `` ____
+
 
 Examples: `KUARD_LB=$(kubectl get service kuard -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')` __query a specific deployment for a parameter__
 
@@ -78,5 +57,5 @@ Examples: `KUARD_LB=$(kubectl get service kuard -o jsonpath='{.status.loadBalanc
 ### Docker
 * `docker run -d --name kuard --publish 8080:8080 gcr.io/kuar-demo/kuard-amd64:blue` ____
 * `docker stop kuard` ____
-* `docker system prune ` __delete all untagged images, all stopped containers etc`__
+* `docker system prune ` __delete all untagged images, all stopped containers etc__
 
